@@ -213,7 +213,9 @@ message ServerInfoResponse {
     string mcpqVersion = 3;
 }
 
-message MaterialRequest {}
+message MaterialRequest {
+    bool only_keys = 1; // if true does not fill any other material information
+}
 message MaterialResponse {
     message Material {
         string key = 1;
@@ -225,9 +227,9 @@ message MaterialResponse {
         bool isFuel = 7;
         bool isInteractable = 8;
         bool isItem = 9;
-        bool isObtainable = 10;
-        bool isOccluding = 11;
-        bool isSolid = 12;
+        bool isOccluding = 10;
+        bool isSolid = 11;
+        bool hasGravity = 12;
     }
     Status status = 1;
     repeated Material materials = 2;
