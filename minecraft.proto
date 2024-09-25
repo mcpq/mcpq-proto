@@ -214,7 +214,7 @@ message ServerInfoResponse {
 }
 
 message MaterialRequest {
-    bool only_keys = 1; // if true does not fill any other material information
+    bool only_keys = 1; // if true does only return key
 }
 message MaterialResponse {
     message Material {
@@ -235,10 +235,13 @@ message MaterialResponse {
     repeated Material materials = 2;
 }
 
-message EntityTypeRequest {}
+message EntityTypeRequest {
+    bool only_keys = 1; // if true does only return key
+}
 message EntityTypeResponse {
     message EntityType {
         string key = 1;
+        bool isSpawnable = 2;
     }
     Status status = 1;
     repeated EntityType types = 2;
