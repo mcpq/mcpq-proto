@@ -6,7 +6,7 @@ package protocol;
 */
 service Minecraft {
     rpc getServerInfo(ServerInfoRequest) returns (ServerInfoResponse);
-    rpc getBlockTypes(BlockTypeRequest) returns (BlockTypeResponse);
+    rpc getMaterials(MaterialRequest) returns (MaterialResponse);
     rpc getEntityTypes(EntityTypeRequest) returns (EntityTypeResponse);
     rpc runCommand(CommandRequest) returns (Status); // deprecated, use runCommandWithOptions instead
     rpc runCommandWithOptions(CommandRequest) returns (CommandResponse);
@@ -213,16 +213,33 @@ message ServerInfoResponse {
     string mcpqVersion = 3;
 }
 
-message BlockTypeRequest {}
-message BlockTypeResponse {
+message MaterialRequest {}
+message MaterialResponse {
+    message Material {
+        string key = 1;
+        bool isAir = 2;
+        bool isBlock = 3;
+        bool isBurnable = 4;
+        bool isEdible = 5;
+        bool isFlammable = 6;
+        bool isFuel = 7;
+        bool isInteractable = 8;
+        bool isItem = 9;
+        bool isObtainable = 10;
+        bool isOccluding = 11;
+        bool isSolid = 12;
+    }
     Status status = 1;
-    repeated string types = 2;
+    repeated Material materials = 2;
 }
 
 message EntityTypeRequest {}
 message EntityTypeResponse {
+    message EntityType {
+        string key = 1;
+    }
     Status status = 1;
-    repeated string types = 2;
+    repeated EntityType types = 2;
 }
 
 message CommandRequest {
