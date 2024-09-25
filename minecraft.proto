@@ -208,18 +208,21 @@ message Event {
 */
 message ServerInfoRequest {}
 message ServerInfoResponse {
-    string mcVersion = 1;
-    string mcpqVersion = 2;
+    Status status = 1;
+    string mcVersion = 2;
+    string mcpqVersion = 3;
 }
 
 message BlockTypeRequest {}
 message BlockTypeResponse {
-    repeated string types = 1;
+    Status status = 1;
+    repeated string types = 2;
 }
 
 message EntityTypeRequest {}
 message EntityTypeResponse {
-    repeated string types = 1;
+    Status status = 1;
+    repeated string types = 2;
 }
 
 message CommandRequest {
