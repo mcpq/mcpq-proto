@@ -5,7 +5,11 @@ package protocol;
     Service functions on Minecraft Server
 */
 service Minecraft {
-    rpc runCommand(CommandRequest) returns (Status);
+    rpc getServerInfo(ServerInfoRequest) returns (ServerInfoResponse);
+    rpc getBlockTypes(BlockTypeRequest) returns (BlockTypeResponse);
+    rpc getEntityTypes(EntityTypeRequest) returns (EntityTypeResponse);
+    rpc runCommand(CommandRequest) returns (Status); // deprecated, use runCommandWithOptions instead
+    rpc runCommandWithOptions(CommandRequest) returns (CommandResponse);
     rpc postToChat(ChatPostRequest) returns (Status);
     rpc accessWorlds(WorldRequest) returns (WorldResponse);
     rpc getHeight(HeightRequest) returns (HeightResponse);
@@ -70,11 +74,35 @@ message Vec3f {
 /** All information about a block that can be shared (i.e. everything except for position (and world) */
 message BlockInfo {
     string blockType = 1;
-    BlockNbtDaten nbt = 2;
+    NBT nbt = 2;
 }
 
-/** Additional NBT information in the form of stringified JSON */
-message BlockNbtDaten {
+/** NBT format: https://minecraft.wiki/w/NBT_format */
+message NBT {
+    string snbt = 1;
+    // TODO: use snbt instead of custom structure?
+    // enum NBTTag {
+    //     END = 0;
+    //     BYTE = 1; // 0b and 1b can be represented as false/true
+    //     SHORT = 2;
+    //     INT = 3;
+    //     LONG = 4;
+    //     FLOAT = 5;
+    //     DOUBLE = 6;
+    //     STRING = 7;
+    //     LIST = 8;
+    //     COMPOUND = 9;
+    //     BYTE_ARRAY = 10;
+    //     INT_ARRAY = 11;
+    //     LONG_ARRAY = 12;
+    // }
+
+    // NBTTag type = 1;
+    // oneof tag {
+    //     map<string, NBT> compound = 2;
+    //     repeat NBT list = 3;
+    //     string single = 4;
+    // }
 }
 
 /** A Minecraft block */
@@ -178,13 +206,35 @@ message Event {
 /**
     Here are the requests and responses for the specific functions
 */
+message ServerInfoRequest {}
+message ServerInfoResponse {
+    string mcVersion = 1;
+    string mcpqVersion = 2;
+}
+
+message BlockTypeRequest {}
+message BlockTypeResponse {
+    repeated string types = 1;
+}
+
+message EntityTypeRequest {}
+message EntityTypeResponse {
+    repeated string types = 1;
+}
 
 message CommandRequest {
     string command = 1;
+    bool blocking = 2;
+    bool output = 3;
+}
+message CommandResponse {
+    Status status = 1;
+    string output = 2;
 }
 
 message ChatPostRequest {
     string message = 1;
+    Player player = 2;
 }
 
 message WorldRequest {
