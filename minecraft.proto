@@ -29,7 +29,7 @@ service Minecraft {
 message Empty {
 }
 
-/** Status if a command was successful or what errors occured */
+/** Status if a command was successful or what errors occurred */
 message Status {
     StatusCode code = 1;
     string extra = 2;
@@ -74,7 +74,8 @@ message Vec3f {
 /** All information about a block that can be shared (i.e. everything except for position (and world) */
 message BlockInfo {
     string blockType = 1;
-    NBT nbt = 2;
+    NBT nbt = 2; // nbt != blockData, nbt can be set on block entities
+    string blockData = 3;
 }
 
 /** NBT format: https://minecraft.wiki/w/NBT_format */
