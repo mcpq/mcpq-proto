@@ -212,6 +212,7 @@ message ServerInfoResponse {
     Status status = 1;
     string mcVersion = 2;
     string mcpqVersion = 3;
+    string serverVersion = 4;
 }
 
 message MaterialRequest {
