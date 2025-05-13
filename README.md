@@ -70,9 +70,10 @@ Checkout the [minecraft.proto](minecraft.proto) file, which is visualized below 
 ## Version Changes
 
 
-| Version (Tag) | Backward Compatible | Forward Compatible |
-| :-----------: | :-----------------: | :----------------: |
-|      v1       |          -          |         -          |
+| Version (Tag) |  Breaking Changes  |     Deprecated     | 
+| :-----------: | :----------------: | :----------------: |
+|      v1       |         -          |         -          |
+|      v2       |         -          |     runCommand     |
 
 > Software using this protocol should specify which version of the protocol they are using (e.g. as their major version number)
 

@@ -5,7 +5,11 @@ package protocol;
     Service functions on Minecraft Server
 */
 service Minecraft {
-    rpc runCommand(CommandRequest) returns (Status);
+    rpc getServerInfo(ServerInfoRequest) returns (ServerInfoResponse);
+    rpc getMaterials(MaterialRequest) returns (MaterialResponse);
+    rpc getEntityTypes(EntityTypeRequest) returns (EntityTypeResponse);
+    rpc runCommand(CommandRequest) returns (Status); // deprecated, use runCommandWithOptions instead
+    rpc runCommandWithOptions(CommandRequest) returns (CommandResponse);
     rpc postToChat(ChatPostRequest) returns (Status);
     rpc accessWorlds(WorldRequest) returns (WorldResponse);
     rpc getHeight(HeightRequest) returns (HeightResponse);
@@ -25,7 +29,7 @@ service Minecraft {
 message Empty {
 }
 
-/** Status if a command was successful or what errors occured */
+/** Status if a command was successful or what errors occurred */
 message Status {
     StatusCode code = 1;
     string extra = 2;
@@ -70,11 +74,36 @@ message Vec3f {
 /** All information about a block that can be shared (i.e. everything except for position (and world) */
 message BlockInfo {
     string blockType = 1;
-    BlockNbtDaten nbt = 2;
+    NBT nbt = 2; // nbt != blockData, nbt can be set on block entities
+    string blockData = 3;
 }
 
-/** Additional NBT information in the form of stringified JSON */
-message BlockNbtDaten {
+/** NBT format: https://minecraft.wiki/w/NBT_format */
+message NBT {
+    string snbt = 1;
+    // TODO: use snbt instead of custom structure?
+    // enum NBTTag {
+    //     END = 0;
+    //     BYTE = 1; // 0b and 1b can be represented as false/true
+    //     SHORT = 2;
+    //     INT = 3;
+    //     LONG = 4;
+    //     FLOAT = 5;
+    //     DOUBLE = 6;
+    //     STRING = 7;
+    //     LIST = 8;
+    //     COMPOUND = 9;
+    //     BYTE_ARRAY = 10;
+    //     INT_ARRAY = 11;
+    //     LONG_ARRAY = 12;
+    // }
+
+    // NBTTag type = 1;
+    // oneof tag {
+    //     map<string, NBT> compound = 2;
+    //     repeat NBT list = 3;
+    //     string single = 4;
+    // }
 }
 
 /** A Minecraft block */
@@ -178,13 +207,61 @@ message Event {
 /**
     Here are the requests and responses for the specific functions
 */
+message ServerInfoRequest {}
+message ServerInfoResponse {
+    Status status = 1;
+    string mcVersion = 2;
+    string mcpqVersion = 3;
+    string serverVersion = 4;
+}
+
+message MaterialRequest {
+    bool only_keys = 1; // if true does only return key
+}
+message MaterialResponse {
+    message Material {
+        string key = 1;
+        bool isAir = 2;
+        bool isBlock = 3;
+        bool isBurnable = 4;
+        bool isEdible = 5;
+        bool isFlammable = 6;
+        bool isFuel = 7;
+        bool isInteractable = 8;
+        bool isItem = 9;
+        bool isOccluding = 10;
+        bool isSolid = 11;
+        bool hasGravity = 12;
+    }
+    Status status = 1;
+    repeated Material materials = 2;
+}
+
+message EntityTypeRequest {
+    bool only_keys = 1; // if true does only return key
+}
+message EntityTypeResponse {
+    message EntityType {
+        string key = 1;
+        bool isSpawnable = 2;
+    }
+    Status status = 1;
+    repeated EntityType types = 2;
+}
 
 message CommandRequest {
     string command = 1;
+    bool blocking = 2;
+    bool output = 3;
+}
+message CommandResponse {
+    Status status = 1;
+    string output = 2;
 }
 
 message ChatPostRequest {
     string message = 1;
+    Player player = 2;
 }
 
 message WorldRequest {
